@@ -72,3 +72,29 @@ class AddressBook(UserDict):
         if key in self.data:
             del self.data[key]
 
+    def birthdays(self):
+        today= datetime.today().date()
+        upcoming_birthdays = []
+
+        for record in self.data.values():
+            if not record.birthday:
+                continue
+
+            current_year_birthday = record.birthday.value.replace(year=today.year)
+
+            if current_year_birthday < today:
+                current_year_birthday = current_year_birthday.replace(year=today.year + 1)
+
+            days_until_birthday = (current_year_birthday - today).days
+
+            if 0 < days_until_birthday <= 7:
+                if current_year_birthday.weekday() == 5:  # Saturday
+                    current_year_birthday += timedelta(days=2)
+                elif current_year_birthday.weekday() == 6:  # Sunday
+                    current_year_birthday += timedelta(days=1)
+
+                upcoming_birthdays.append(f"{record.name.value} -> {current_year_birthday.strftime('%d.%m.%Y')}")
+ 
+        if not upcoming_birthdays:
+            return "No birthdays in the next 7 days."
+        return "Upcoming birthdays:\n" + "\n".join(upcoming_birthdays)     

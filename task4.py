@@ -101,34 +101,7 @@ def show_birthday(args, book: AddressBook):
     if not record.birthday:
         return f"{name} does not have a birthday set."
     return f"{name}'s birthday is {record.birthday.value.strftime('%d.%m.%Y')}"
-
-@input_error
-def birthdays(args, book: AddressBook):
-        today= datetime.today().date()
-        upcoming_birthdays = []
-
-        for record in book.data.values():
-            if not record.birthday:
-                continue
-
-            current_year_birthday = record.birthday.value.replace(year=today.year)
-
-            if current_year_birthday < today:
-                current_year_birthday = current_year_birthday.replace(year=today.year + 1)
-
-            days_until_birthday = (current_year_birthday - today).days
-
-            if 0 < days_until_birthday <= 7:
-                if current_year_birthday.weekday() == 5:  # Saturday
-                    current_year_birthday += timedelta(days=2)
-                elif current_year_birthday.weekday() == 6:  # Sunday
-                    current_year_birthday += timedelta(days=1)
-
-                upcoming_birthdays.append(f"{record.name.value} -> {current_year_birthday.strftime('%d.%m.%Y')}")
- 
-        if not upcoming_birthdays:
-            return "No birthdays in the next 7 days."
-        return "Upcoming birthdays:\n" + "\n".join(upcoming_birthdays)                                   
+                              
 
 
 def main():
@@ -158,7 +131,7 @@ def main():
         elif command == "show-birthday":
             print(show_birthday(args, contacts))
         elif command == "birthdays":
-            print(birthdays(args, contacts))
+            print(contacts.birthdays())
         else:
             print("Invalid command.")    
 
