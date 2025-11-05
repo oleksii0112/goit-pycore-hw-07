@@ -1,5 +1,5 @@
 import re
-from cli_bot import AddressBook, Record, Phone, Field
+from cli_bot import AddressBook, Record, Phone, Field, save_data, load_data
 from datetime import datetime, timedelta
 
 def input_error(func):
@@ -105,13 +105,14 @@ def show_birthday(args, book: AddressBook):
 
 
 def main():
-    contacts = AddressBook()
+    contacts = load_data()
     print ("Welcome to the assistant bot! Type 'hello' to continue, 'exit/close' to exit")
     while True:
         user_input = input("Input a command: ")
         exit_cmd = ["exit", "close"]
         command, args = parse_input(user_input)
         if command in exit_cmd:
+           save_data(contacts)
            print("Good bye!")
            break
         elif command == "hello":
